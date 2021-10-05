@@ -2,11 +2,8 @@ package main;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
 
-import model.Campaign;
 import service.impl.CampaignService;
-import utils.DBUtils;
 
 public class Main {
 	public static void main(String[] args) throws IOException, URISyntaxException {
