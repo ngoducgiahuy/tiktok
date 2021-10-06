@@ -1,60 +1,42 @@
 package dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class AdDto {
-	@Id
-	@Column(name = "ad_id")
 	@JsonProperty(value = "ad_id")
 	private Long adId;
 
-	@Column(name = "ad_name")
 	@JsonProperty(value = "ad_name")
 	private String adName;
 
-	@Column(name = "advertiser_id")
 	@JsonProperty(value = "advertiser_id")
 	private Long advertiserId;
 
-	@Column(name = "campaign_id")
 	@JsonProperty(value = "campaign_id")
 	private Long campaignId;
 	
-	@Column(name = "campaign_name")
 	@JsonProperty(value = "campaign_name")
 	private String campaignName;
 	
-	@Column(name = "adgroup_id")
 	@JsonProperty(value = "adgroup_id")
 	private Long adgroupId;
 	
-	@Column(name = "adgroup_name")
 	@JsonProperty(value = "adgroup_name")
 	private String adgroupName;
 	
-	@Column(name = "ad_text")
 	@JsonProperty(value = "ad_text")
 	private String adText;
 	
-	@Column(name = "ad_format")
 	@JsonProperty(value = "ad_format")
 	private String adFormat;
 	
-	@Column(name = "status")
 	@JsonProperty(value = "status")
 	private String status;
 	
-	@Column(name = "opt_status")
 	@JsonProperty(value = "opt_status")
 	private String optStatus;
 	
-	@Column(name = "app_name")
 	@JsonProperty(value = "app_name")
 	private String appName;
 

@@ -22,7 +22,6 @@ import dto.AdgroupDto;
 import model.Adgroup;
 import service.EntityService;
 import utils.FunctionHelper;
-import utils.HibernateUtils;
 
 public class AdGroupService implements EntityService {
 	
@@ -48,19 +47,15 @@ public class AdGroupService implements EntityService {
 		return this.getListWithAllData(path, accessToken, advertiserId, fieldList);
 	}
 	
-	public void importData(String accessToken, Long advertiserId)
+	public void importData(String accessToken, Long advertiserId, Session session)
 			throws JSONException, IOException, URISyntaxException {
 		JSONArray resultList = this.getDataAdgroup(accessToken, advertiserId);
-		Session session = HibernateUtils.getSessionFactory().openSession();
-        session.beginTransaction();
 		for (Object adgroup : resultList) {
 			AdgroupDto adgroupDto = convertToDto(adgroup);
 			Adgroup adgroupEntity = convertToEntity(adgroupDto);
 			System.out.println(adgroupEntity);
 			session.saveOrUpdate(adgroupEntity);
 		}
-		session.getTransaction().commit();
-        HibernateUtils.shutdown();
 
 	}
 	

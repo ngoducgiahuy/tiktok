@@ -21,7 +21,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dto.AdDto;
 import model.Ad;
 import service.EntityService;
-import utils.HibernateUtils;
 
 public class AdService implements EntityService{
 	public JSONArray getDataAd(String accessToken, Long advertiserId)
@@ -43,20 +42,14 @@ public class AdService implements EntityService{
 		return this.getListWithAllData(path, accessToken, advertiserId, fieldList);
 	}
 	
-	public void importData(String accessToken, Long advertiserId)
+	public void importData(String accessToken, Long advertiserId, Session session)
 			throws JSONException, IOException, URISyntaxException {
 		JSONArray resultList = this.getDataAd(accessToken, advertiserId);
-		Session session = HibernateUtils.getSessionFactory().openSession();
-        session.beginTransaction();
 		for (Object ad : resultList) {
 			AdDto adDto = convertToDto(ad);
 			Ad adEntity = convertToEntity(adDto);
-			System.out.println(adEntity);
 			session.saveOrUpdate(adEntity);
 		}
-		session.getTransaction().commit();
-        HibernateUtils.shutdown();
-
 	}
 	
 	public AdDto convertToDto(Object obj) throws JsonMappingException, JsonProcessingException {

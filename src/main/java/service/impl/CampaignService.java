@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.modelmapper.ModelMapper;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,9 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import dto.CampaignDto;
 import model.Campaign;
 import service.EntityService;
-import utils.HibernateUtils;
 
 public class CampaignService implements EntityService {
 
@@ -44,27 +45,28 @@ public class CampaignService implements EntityService {
 		return this.getListWithAllData(path, accessToken, advertiserId, fieldList);
 	}
 
-	public void importData(String accessToken, Long advertiserId)
+	public void importData(String accessToken, Long advertiserId, Session session)
 			throws JSONException, IOException, URISyntaxException {
 		JSONArray resultList = this.getDataCampaign(accessToken, advertiserId);
-		Session session = HibernateUtils.getSessionFactory().openSession();
-        session.beginTransaction();
 		for (Object camp : resultList) {
-			Campaign campaignEntity = convertToEntity(camp);
-			System.out.println(convertToEntity(camp));
+			CampaignDto campaignDto = convertToDto(camp);
+			Campaign campaignEntity = convertToEntity(campaignDto);
 			session.saveOrUpdate(campaignEntity);
 		}
-		session.getTransaction().commit();
-        HibernateUtils.shutdown();
-
 	}
-
-	public Campaign convertToEntity(Object obj) throws JsonMappingException, JsonProcessingException {
+	
+	public CampaignDto convertToDto(Object obj) throws JsonMappingException, JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.registerModule(new JavaTimeModule());
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
-		Campaign campaignModel = mapper.readValue(obj.toString(), Campaign.class);
+		CampaignDto campaignDto = mapper.readValue(obj.toString(), CampaignDto.class);
+		return campaignDto;
+	}
+	
+	public Campaign convertToEntity (CampaignDto campaignDto) {
+		ModelMapper mapper = new ModelMapper();
+		Campaign campaignModel = mapper.map(campaignDto, Campaign.class);
 		return campaignModel;
 	}
 	
